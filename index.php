@@ -115,7 +115,7 @@ pre { margin-top: 0; }
 </ul>
 <ul>
 <?php foreach ($vars->files as $file): ?>
-<li><a href="?dir=<?php echo $vars->cwd; ?>&file=<?php echo $file; ?>"><?php echo htmlspecialchars($file); ?></a>
+<li><a href="?dir=<?php echo $vars->cwd; ?>&amp;file=<?php echo $file; ?>"><?php echo htmlspecialchars($file); ?></a>
 <?php endforeach; ?>
 </ul>
 
