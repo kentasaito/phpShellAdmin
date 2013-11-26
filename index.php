@@ -129,13 +129,30 @@ pre { margin-top: 0; }
 <table class="h100 w100">
 <tr><td class="h100"><textarea class="h100 w100" name="contents" onchange="changed = true;">
 <?php echo htmlspecialchars($vars->contents); ?></textarea>
-<tr><td><input type="submit" value="Save" accesskey="s" onclick="changed = false;">
+<tr><td><input type="submit" value="Save(S)" accesskey="s" onclick="changed = false;"><input type="button" value="Line jump(G)" accesskey="g" onclick="line_jump();">
 </table>
 </form>
 <?php endif; ?>
 </table>
 <script>
+function line_jump()
+{
+	var n = prompt('Line number');
+
+	elem = document.getElementsByName('contents')[0];
+	var pos1 = -1;
+	for (n--; n > 0; n--)
+	{
+		pos1 = elem.value.indexOf('\n', pos1 + 1);
+	}
+	elem.focus();
+	elem.setSelectionRange(pos1 + 1, pos1 + 1);
+}
 document.querySelector('textarea').addEventListener('keydown', function(e) {
+
+	var ctrl = typeof e.modifiers == 'undefined' ? e.ctrlKey : e.modifiers & Event.CONTROL_MASK;
+	var shift = typeof e.modifiers == 'undefined' ? e.shiftKey : e.modifiers & Event.SHIFT_MASK;
+
 	if (e.keyCode === 9) {
 		e.preventDefault();
 		var elem = e.target;
@@ -152,7 +169,7 @@ document.querySelector('textarea').addEventListener('keydown', function(e) {
 		}
 		else
 		{
-			if (typeof e.modifiers == 'undefined' ? e.shiftKey : e.modifiers & Event.SHIFT_MASK)
+			if (shift)
 			{
 				buf = buf.replace(/\n\t/g, '\n');
 				buf = buf.replace(/^\t/, '');
