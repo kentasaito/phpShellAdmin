@@ -140,9 +140,34 @@ document.querySelector('textarea').addEventListener('keydown', function(e) {
 		e.preventDefault();
 		var elem = e.target;
 		var val = elem.value;
-		var pos = elem.selectionStart;
-		elem.value = val.substr(0, pos) + '\t' + val.substr(pos, val.length);
-		elem.setSelectionRange(pos + 1, pos + 1);
+		var pos1 = elem.selectionStart;
+		var pos2 = elem.selectionEnd;
+		var buf = val.substr(pos1, pos2 - pos1);
+
+		if (pos2 == pos1)
+		{
+			buf = '\t' + buf;
+			elem.value = val.substr(0, pos1) + buf + val.substr(pos2);
+			elem.setSelectionRange(pos1 + 1, pos1 + 1);
+		}
+		else
+		{
+			if (typeof e.modifiers == 'undefined' ? e.shiftKey : e.modifiers & Event.SHIFT_MASK)
+			{
+				buf = buf.replace(/\n\t/g, '\n');
+				buf = buf.replace(/^\t/, '');
+				range2 = pos2 - buf.match(/\n/g).length;
+			}
+			else
+			{
+				buf = buf.replace(/\n/g, '\n\t');
+				buf = buf.replace(/\t$/, '');
+				buf = '\t' + buf;
+				range2 = pos2 + buf.match(/\n/g).length;
+			}
+			elem.value = val.substr(0, pos1) + buf + val.substr(pos2);
+			elem.setSelectionRange(pos1, range2);
+		}
 	}
 });
 </script>
