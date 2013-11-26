@@ -22,6 +22,8 @@ if (isset($_GET['file']))
 	if (isset($_POST['contents']))
 	{
 		file_put_contents($file, $_POST['contents']);
+		header('Location: ?dir='.$cwd.'&file='.$file);
+		exit;
 	}
 	$contents = file_get_contents($file);
 }
