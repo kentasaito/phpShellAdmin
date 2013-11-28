@@ -21,7 +21,8 @@ if (isset($_GET['file']))
 	$file = $_GET['file'];
 	if (isset($_POST['contents']))
 	{
-		file_put_contents($file, $_POST['contents']);
+		$contents = preg_replace('/\r\n/', "\n", $_POST['contents']);
+		file_put_contents($file, $contents);
 		header('Location: ?dir='.$cwd.'&file='.$file);
 		exit;
 	}
