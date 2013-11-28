@@ -145,7 +145,7 @@ pre { margin-top: 0; }
 <?php elseif (isset($vars->contents)): ?>
 <form method="post" class="h100">
 <table class="h100 w100">
-<tr><td class="h100"><textarea class="h100 w100" name="contents" onchange="changed = true;">
+<tr><td class="h100"><textarea class="h100 w100" name="contents" onchange="changed = true;" wrap="off">
 <?php echo htmlspecialchars($vars->contents); ?></textarea>
 <tr><td><input type="submit" value="Save(S)" accesskey="s" onclick="changed = false;"><input type="button" value="Line jump(G)" accesskey="g" onclick="line_jump();">
 </table>
