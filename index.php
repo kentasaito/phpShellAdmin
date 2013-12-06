@@ -163,8 +163,9 @@ function line_jump()
 	{
 		pos1 = elem.value.indexOf('\n', pos1 + 1);
 	}
+	pos2 = elem.value.indexOf('\n', pos1 + 1);
 	elem.focus();
-	elem.setSelectionRange(pos1 + 1, pos1 + 1);
+	elem.setSelectionRange(pos1 + 1, pos2 + 1);
 }
 document.querySelector('textarea').addEventListener('keydown', function(e) {
 
