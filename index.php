@@ -111,7 +111,7 @@ pre { margin-top: 0; }
 <td class="bordered">
 <form method="post" action="?dir=<?php echo htmlspecialchars($vars->cwd); ?>" enctype="multipart/form-data">
 <table><tr>
-<td><input type="file" name="file">
+<td><input type="file" name="file" style="width: 64px;">
 <td><input type="submit" value="Upload">
 </table>
 </form>
