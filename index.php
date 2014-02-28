@@ -125,7 +125,7 @@ pre { margin-top: 0; }
 </form>
 
 <tr>
-<td class="bordered">
+<td class="bordered" nowrap>
 <ul>
 <?php foreach ($vars->dirs as $dir): ?>
 <li><a href="?dir=<?php echo $vars->cwd; ?>/<?php echo $dir; ?>"><?php echo htmlspecialchars($dir); ?></a>
