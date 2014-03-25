@@ -60,6 +60,11 @@ $vars = (object) [
 if (isset($file))
 {
 	$vars->file = $file;
+	$main_pane = __DIR__.'/ext/'.preg_replace('/.*\./', '', $vars->file).'.php';
+	if (file_exists($main_pane))
+	{
+		$vars->main_pane = $main_pane;
+	}
 }
 if (isset($stdout))
 {
@@ -138,7 +143,9 @@ pre { margin-top: 0; }
 </ul>
 
 <td class="bordered h100 w100">
-<?php if (isset($vars->stdout)): ?>
+<?php if (isset($vars->main_pane)): ?>
+<?php require_once $vars->main_pane; ?>
+<?php elseif (isset($vars->stdout)): ?>
 <pre>
 <?php echo htmlspecialchars($vars->stdout); ?>
 </pre>
