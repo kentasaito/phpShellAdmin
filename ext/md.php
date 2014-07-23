@@ -3,6 +3,9 @@ require_once __DIR__.'/../vendor/autoload.php';
 use \Michelf\MarkdownExtra;
 $my_html = MarkdownExtra::defaultTransform($vars->contents);
 $my_html = str_replace('<table', '<TABLE border="1"', $my_html);
+
+$file = $_GET['file'];
+file_put_contents(preg_replace('/\.md$/', '.html', $file), $my_html);
 ?>
 
 <style>
