@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					document.getElementById('contents').focus();
 				}
 			};
-			xhr.send('contents=' + document.getElementById('contents').value);
+			xhr.send('contents=' + encodeURIComponent(document.getElementById('contents').value));
 		});
 
 		document.getElementById('contents').addEventListener('keydown', e => {
