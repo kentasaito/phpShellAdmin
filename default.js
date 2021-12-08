@@ -28,6 +28,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			xhr.send('contents=' + encodeURIComponent(document.getElementById('contents').value));
 		});
 
+		// 行ジャンプのクリックで任意の行にジャンプする
+		document.getElementById('go_to_line').addEventListener('click', e => {
+			const gyo_bango = parseInt(prompt('Line number:'));
+			document.getElementById('contents').setSelectionRange(
+				document.getElementById('contents').value.match(new RegExp('([^\n]*\n){' + (gyo_bango - 1) + '}'))[0].length,
+				document.getElementById('contents').value.match(new RegExp('([^\n]*\n){' + gyo_bango + '}'))[0].length
+			);
+			document.getElementById('contents').focus();
+		});
+
 		document.getElementById('contents').addEventListener('keydown', e => {
 			if (e.code === 'Tab') {
 				e.preventDefault();
